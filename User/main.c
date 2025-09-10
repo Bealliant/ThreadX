@@ -1,0 +1,23 @@
+//
+// Created by a2012 on 3/5/2025.
+//
+#include "stm32f10x.h"
+#include "bsp_i2c.h"
+#include "bsp_delay.h"
+#include "stdio.h"
+#include "bsp_led.h"
+#include "bsp_uart.h"
+
+int main(){
+
+    bsp_led_init();
+    bsp_uartx_init(printf_UART,DISABLE);
+
+
+    while (1)
+    {
+        bsp_led_toggle();
+        Delay_ms(30);
+    }
+    return 0;
+}
