@@ -14,8 +14,8 @@ int main(){
     bsp_led_init();
     bsp_uartx_init(printf_UART,DISABLE);
     mpu6050_info mpu6050_data;
+    Delay_ms(10);
     mpu6050_init();
-//    Delay_ms(100);
 
     while (1)
     {
