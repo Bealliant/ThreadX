@@ -49,11 +49,11 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-include_directories(Core/Inc Library/Inc bsp/Inc)
+include_directories(Core/Inc Library/Inc bsp/Inc Peripheral/Inc)
 
 add_definitions(-DDEBUG -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD)
 
-file(GLOB_RECURSE SOURCES "Core/*.*" "Library/*.*" "Startup/*.*" "User/*.*" "bsp/*.*")
+file(GLOB_RECURSE SOURCES "Core/*.*" "Library/*.*" "Startup/*.*" "User/*.*" "bsp/*.*" "Peripheral/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F103C8TX_FLASH.ld)
 

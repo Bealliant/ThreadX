@@ -2,7 +2,7 @@
 // Created by a2012 on 5/9/2025.
 //
 
-#include "bsp_led.h"
+#include "../Inc/bsp_led.h"
 
 void bsp_led_init(){
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
