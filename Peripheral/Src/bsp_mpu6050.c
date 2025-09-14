@@ -32,9 +32,9 @@
  * */
 void mpu6050_init(){
     Softi2c i2c_initstruct = {
-        .i2c_GPIOPort = GPIOA,
-        .i2c_scl = GPIO_Pin_11,
-        .i2c_sda = GPIO_Pin_12,
+        .i2c_GPIOPort = GPIOB,
+        .i2c_scl = GPIO_Pin_6,
+        .i2c_sda = GPIO_Pin_7,
         .debug = DISABLE
     };
     bsp_soft_i2c_init(&i2c_initstruct);
