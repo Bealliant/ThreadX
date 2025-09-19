@@ -5,23 +5,27 @@
 #include "bsp_i2c.h"
 #include "bsp_delay.h"
 #include "stdio.h"
-#include "bsp_led.h"
+#include "periph_led.h"
 #include "bsp_uart.h"
-#include "bsp_mpu6050.h"
+#include "periph_mpu6050.h"
+#include "periph_at24cxx.h"
+
 
 int main(){
-
-    bsp_led_init();
+    uint8_t write_buf[5] = {0xDE, 0xAD, 0xBE, 0xEF, 0x01};
+    uint8_t read_buf[5] = {0};
     bsp_uartx_init(printf_UART,DISABLE);
-    mpu6050_info mpu6050_data;
-    Delay_ms(10);
-    mpu6050_init();
-
+    bsp_led_init();
+    at24cxx_init();
     while (1)
     {
         bsp_led_toggle();
-        mpu6050_get_data(&mpu6050_data);
-        mpu6050_info_print(&mpu6050_data);
+        at24cxx_array_write(0x00, write_buf, 5);
+        Delay_ms(10);
+        at24cxx_array_read(0x00, read_buf, 5);
+        for (int i = 0; i < 5; ++i) {
+            printf("0x%02X ", read_buf[i]);
+        }
         Delay_ms(50);
     }
     return 0;

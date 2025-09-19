@@ -1,7 +1,7 @@
 //
 // Created by a2012 on 10/9/2025.
 //
-#include "bsp_mpu6050.h"
+#include "periph_mpu6050.h"
 #include "bsp_i2c.h"
 #include "bsp_delay.h"
 #include "stdio.h"

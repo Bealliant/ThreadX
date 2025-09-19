@@ -2,8 +2,8 @@
 // Created by a2012 on 10/9/2025.
 //
 
-#ifndef THREADX_BSP_MPU6050_H
-#define THREADX_BSP_MPU6050_H
+#ifndef THREADX_PERIPH_MPU6050_H
+#define THREADX_PERIPH_MPU6050_H
 #include "stm32f10x.h"
 
 #define mpu6050_addr0 0x00
@@ -101,5 +101,5 @@ typedef struct {
 void mpu6050_init(void);
 void mpu6050_get_data(mpu6050_info* data);
 void mpu6050_info_print(mpu6050_info* data);
-#endif //THREADX_BSP_MPU6050_H
+#endif //THREADX_PERIPH_MPU6050_H
 

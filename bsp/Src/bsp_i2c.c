@@ -8,6 +8,8 @@ static GPIO_TypeDef* gpiox;
 static uint16_t scl, sda;
 static uint8_t debug_flag;
 
+// TODO: we will be able to implement multi-instance soft i2c in the future.
+// TODO: both hardware i2c and software i2c can be initialized within a same function.
 /**
  * @brief - to Activate the GPIO Clock Source, GPIO Pin for Soft i2c using
  * @param softi2c_initstruct: A softi2c* struct pointer
@@ -134,7 +136,7 @@ void bsp_soft_i2c_byte_write(uint8_t device, uint8_t data){
 }
 
 /**
- * @brief: to read a byte of data from the i2c peripheral
+ * @brief: to read a byte of data from the i2c peripheral, or it can be used in `current address read` operation.
  * @param device: the device address of an i2c peripheral, the LSB should be set to 1 to indicate a read operation
  * @param data: a uint8_t type for the data buffer.
  * @param length: the length for all the data to be read.
