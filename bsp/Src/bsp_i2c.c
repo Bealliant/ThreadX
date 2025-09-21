@@ -13,6 +13,8 @@ static uint8_t debug_flag;
 /**
  * @brief - to Activate the GPIO Clock Source, GPIO Pin for Soft i2c using
  * @param softi2c_initstruct: A softi2c* struct pointer
+ * @note: ATTENTION: the scl pin is initialized before sda pin, (after initialization, pins will be set to low by default)
+  *         if sda is initialized before scl, there might be some unexpected start condition.
  * @return - None
  */
 void bsp_soft_i2c_init(Softi2c* softi2c_initstruct){
@@ -38,21 +40,19 @@ void bsp_soft_i2c_init(Softi2c* softi2c_initstruct){
         soft_i2c_rccperiph = RCC_APB2Periph_GPIOG;
     }
     RCC_APB2PeriphClockCmd(soft_i2c_rccperiph,ENABLE);
-    GPIO_InitTypeDef soft_i2c_sda_gpioinit = {
-            .GPIO_Mode = softi2c_initstruct->debug ? GPIO_Mode_Out_PP : GPIO_Mode_Out_OD,
-            .GPIO_Speed = GPIO_Speed_10MHz,
-            .GPIO_Pin = softi2c_initstruct->i2c_sda
-    };
-    GPIO_Init(softi2c_initstruct->i2c_GPIOPort, &soft_i2c_sda_gpioinit);
     GPIO_InitTypeDef soft_i2c_scl_gpioinit = {
             .GPIO_Mode = softi2c_initstruct->debug ? GPIO_Mode_Out_PP : GPIO_Mode_Out_OD,
             .GPIO_Speed = GPIO_Speed_10MHz,
             .GPIO_Pin = softi2c_initstruct->i2c_scl,
     };
     GPIO_Init(softi2c_initstruct->i2c_GPIOPort, &soft_i2c_scl_gpioinit);
+    GPIO_InitTypeDef soft_i2c_sda_gpioinit = {
+            .GPIO_Mode = softi2c_initstruct->debug ? GPIO_Mode_Out_PP : GPIO_Mode_Out_OD,
+            .GPIO_Speed = GPIO_Speed_10MHz,
+            .GPIO_Pin = softi2c_initstruct->i2c_sda
+    };
+    GPIO_Init(softi2c_initstruct->i2c_GPIOPort, &soft_i2c_sda_gpioinit);
 
-    GPIO_WriteBit(softi2c_initstruct->i2c_GPIOPort,softi2c_initstruct->i2c_scl,Bit_SET);
-    GPIO_WriteBit(softi2c_initstruct->i2c_GPIOPort,softi2c_initstruct->i2c_sda,Bit_SET);
     Delay_ms(5);
 }
 
@@ -64,7 +64,7 @@ void bsp_soft_i2c_init(Softi2c* softi2c_initstruct){
  * */
 static void i2c_scl_drive(uint8_t dat){
     gpiox->BSRR = scl<<(16*(1-dat));
-    Delay_us(10);
+    Delay_us(5);
 }
 /**
  * @brief: to control the bit action of sda line
@@ -72,7 +72,7 @@ static void i2c_scl_drive(uint8_t dat){
  * */
 static void i2c_sda_drive(uint8_t dat){
     gpiox->BSRR = sda<<(16*(1-dat));
-    Delay_us(10);
+    Delay_us(5);
 }
 
 ///@brief: to start the i2c transmission session.
@@ -108,7 +108,6 @@ void bsp_soft_i2c_send(uint8_t byte){
     i2c_scl_drive(1);
     __NOP();//
     i2c_scl_drive(0);
-
 }
 
 /**
@@ -132,6 +131,20 @@ void bsp_soft_i2c_byte_write(uint8_t device, uint8_t data){
     bsp_soft_i2c_start();
     bsp_soft_i2c_send(device);
     bsp_soft_i2c_send(data);
+    bsp_soft_i2c_end();
+}
+/**
+ * @brief: to send a uint8_t array to the device
+ * @param device: the device address of an i2c peripheral, the LSB should be set to 0 to indicate a write operation
+ * @param data: a uint8_t pointer for the data buffer
+ * @param length: the length for all the data to be sent
+ * */
+void bsp_soft_i2c_array_write(uint8_t device, const uint8_t* data, uint8_t length) {
+    bsp_soft_i2c_start();
+    bsp_soft_i2c_send(device);
+    for (uint8_t pos = 0; pos< length; pos++) {
+        bsp_soft_i2c_send(data[pos]);
+    }
     bsp_soft_i2c_end();
 }
 
