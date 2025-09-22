@@ -9,7 +9,6 @@
 /**
  * @brief: Initialize the mpu6050 device upon power on.
  * @note: the register to set when power on:
- *  1. power_mgmt_1: set to 0x00 to wake up the device
  *  2. sample_rate: set to 0x07 to set the sample rate
  *  3. gyro_config: set to 0x18 to set the gyro full scale range to ±2000°/s
  *      GYRO_CONFIG FS_SEL[1:0] | Full Scale Range
@@ -38,7 +37,6 @@ void mpu6050_init(){
         .debug = DISABLE
     };
     bsp_soft_i2c_init(&i2c_initstruct);
-    bsp_soft_i2c_byte_write(0x00,0x00);
     bsp_soft_i2c_reg8byte(mpu6050_addr_write,mpu6050_power_mgmt_1,0x00);
     bsp_soft_i2c_reg8byte(mpu6050_addr_write,mpu6050_sample_rate,0x07);
     bsp_soft_i2c_reg8byte(mpu6050_addr_write,mpu6050_gyro_config,mpu6050_gyro_scale_setting);
